@@ -14,6 +14,7 @@ namespace woanware
         public bool AlwaysOnTop { get; set; }
         public bool ColourSevereItems { get; set; }
         public bool RemoveNewLinesOnExport { get; set; }
+        public bool MoveFocusToList { get; set; }
         public Point FormLocation { get; set; }
         public Size FormSize { get; set; }
         public FormWindowState FormState { get; set; }
@@ -28,24 +29,19 @@ namespace woanware
         {
             try
             {
-                string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"woanware\" + Application.ProductName + @"\");
+                string path = GetPath();
 
-                if (File.Exists(System.IO.Path.Combine(path, FILENAME)) == false)
+                if (File.Exists(path) == false)
                 {
                     return string.Empty;
                 }
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                if (File.Exists(System.IO.Path.Combine(path, FILENAME)) == false)
-                {
-                    return "Cannot locate configuration file: " + System.IO.Path.Combine(path, FILENAME);
-                }
 
-                FileInfo info = new FileInfo(System.IO.Path.Combine(path, FILENAME));
+                FileInfo info = new FileInfo(path);
                 using (FileStream stream = info.OpenRead())
                 {
                     Settings settings = (Settings)serializer.Deserialize(stream);
-
                     FormLocation = settings.FormLocation;
                     FormSize = settings.FormSize;
                     FormState = settings.FormState;
@@ -54,7 +50,7 @@ namespace woanware
                     RemoveNewLinesOnExport = settings.RemoveNewLinesOnExport;
                     AlwaysOnTop = settings.AlwaysOnTop;
                     NumResultsPerPage = settings.NumResultsPerPage;
-
+                    MoveFocusToList = settings.MoveFocusToList;
                     return string.Empty;
                 }
             }
@@ -84,14 +80,13 @@ namespace woanware
         {
             try
             {
-                string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"woanware\" + Application.ProductName + @"\");
-                if (System.IO.Directory.Exists(path) == false)
+                if (System.IO.Directory.Exists(Misc.GetUserDataDirectory()) == false)
                 {
-                    System.IO.Directory.CreateDirectory(path);
+                    IO.CreateDirectory(Misc.GetUserDataDirectory());
                 }
 
                 XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                using (StreamWriter writer = new StreamWriter(System.IO.Path.Combine(path, FILENAME), false))
+                using (StreamWriter writer = new StreamWriter(this.GetPath(), false))
                 {
                     serializer.Serialize((TextWriter)writer, this);
                     return string.Empty;
@@ -118,12 +113,20 @@ namespace woanware
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        private string GetPath()
+        {
+            return System.IO.Path.Combine(Misc.GetUserDataDirectory(), FILENAME);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool FileExists
         {
             get
             {
-                string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"woanware\" + Application.ProductName + @"\");
-                return File.Exists(System.IO.Path.Combine(path, FILENAME));
+                return File.Exists(this.GetPath());
             }
         }
     }

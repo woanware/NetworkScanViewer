@@ -15,7 +15,7 @@ To check whether the correct version of nessus export files is being used, open 
     <?xml version="1.0" ?>
     <NessusClientData_v2>
     
-**Features**
+## Features ##
 
 - Data cleansing
 - Export to CSV and XML
@@ -25,7 +25,14 @@ To check whether the correct version of nessus export files is being used, open 
 - Data paging to support large volumes of data
 - ESENT database to support large volumes of data
 
-**Requirements**
+## Third party libraries ##
+
+- [dockpanelsuite](https://github.com/dockpanelsuite): Windows docking
+- [ManagedEsent](https://managedesent.codeplex.com/): Modified version of the library to utilise the Pixie components
+- [ObjectListView](http://objectlistview.sourceforge.net/cs/index.html) : Data viewing via lists
+- [Utility](http://www.woanware.co.uk) (woanware) : My helper library
+
+## Requirements ##
 
 - Windows x64
 - Microsoft .NET Framework v4.5

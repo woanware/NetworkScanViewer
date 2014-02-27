@@ -37,6 +37,7 @@ namespace woanware
             chkAlwaysOnTop.Checked = Settings.AlwaysOnTop;
             chkColourSevere.Checked = Settings.ColourSevereItems;
             chkRemoveNewLinesOnExport.Checked = Settings.RemoveNewLinesOnExport;
+            chkMoveFocusToList.Checked = Settings.MoveFocusToList;
 
             UserInterface.LocateAndSelectComboBoxValue(Settings.NumResultsPerPage.ToString(), cboNumResultsPerPage);
 
@@ -92,6 +93,7 @@ namespace woanware
             Settings.ColourSevereItems = chkColourSevere.Checked;
             Settings.AlwaysOnTop = chkAlwaysOnTop.Checked;
             Settings.RemoveNewLinesOnExport = chkRemoveNewLinesOnExport.Checked;
+            Settings.MoveFocusToList = chkMoveFocusToList.Checked;
 
             if (cboNumResultsPerPage.SelectedIndex == -1)
             {

@@ -1,5 +1,17 @@
 # History #
 
+**v1.2.1**
+
+- Implemented docking windows using the dockpanelsuite library. This allows the main description window to be docked in various positions or as a floating window
+- Updated the window handlers to be in-line with current coding standards
+- Updated the multi-threading to use Tasks rather than delegates
+- Modified the parser to use a stream rather than load entire files in one go
+- Updated the Settings object to be in-line with current coding standards
+- Changed solution platform target to "Any CPU", which should be more flexible
+- Updated ObjectListView to v2.7.0
+- Modified to allow the copying of host names using the lists context menu
+- Added option to set focus to the results list after a filter item has changed. This option defaults to off and can be modified via the Options window
+
 **v1.2.0**
 
 - Recompiled all dependencies to be x64

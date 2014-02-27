@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Isam.Esent;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace woanware
 {
@@ -25,13 +27,15 @@ namespace woanware
 
         #region Member Variables
         private Settings _settings = null;
-        private IgnorePlugins _ignoredPlugins = null;
+        public IgnorePlugins IgnoredPlugins { get; set; }
         private FileFinder _fileFinder = null;
         private Parser _networkScanParser = null;
         private bool _isLoading = false;
         private int _currentResultsPage = 1;
         private int _totalResultsPages = 0;
         private HourGlass _hourGlass;
+        private FormList formList;
+        private FormDescription formDescription;
         #endregion
 
         #region Constructor
@@ -43,15 +47,40 @@ namespace woanware
             InitializeComponent();
 
             _fileFinder = new FileFinder();
-            _fileFinder.CompleteEvent += new EventHandler(OnFileFinder_CompleteEvent);
-            _fileFinder.UpdateEvent += new FileFinder.UpdateEventHandler(OnFileFinder_UpdateEvent);
+            _fileFinder.CompleteEvent += new woanware.Events.DefaultEvent(OnFileFinder_CompleteEvent);
+            _fileFinder.UpdateEvent += new woanware.Events.MessageEvent(OnFileFinder_UpdateEvent);
 
             _networkScanParser = new Parser();
-            _networkScanParser.UpdateEvent += new Parser.UpdateEventHandler(OnNetworkScanParser_UpdateEvent);
-            //_networkScanParser.ResultEvent += new NetworkScanParser.ResultEventHandler(OnNetworkScanParser_ResultEvent);
-            _networkScanParser.CompleteEvent += new Parser.CompleteEventHandler(OnNetworkScanParser_CompleteEvent);
+            _networkScanParser.UpdateEvent += new woanware.Events.MessageEvent(OnNetworkScanParser_UpdateEvent);
+            _networkScanParser.CompleteEvent += new woanware.Events.DefaultEvent(OnNetworkScanParser_CompleteEvent);
 
             SetPagingButtonStatus();
+
+            this.formList = new FormList();
+            this.formList.ResultSelectedEvent += formList_ResultSelectedEvent;
+            this.formList.BackColor = this.BackColor;
+            this.formList.Show(dockPanel, DockState.DockRight);
+            this.formList.SetFormMain(this);
+
+            DockPane dp = dockPanel.DockPaneFactory.CreateDockPane(formList, DockState.Document, true);
+
+            this.formDescription = new FormDescription();
+            this.formDescription.BackColor = this.BackColor;
+            this.formDescription.Show(dockPanel, DockState.DockRight);
+        }
+        #endregion
+
+        #region Child Form Event Handlers
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        private void formList_ResultSelectedEvent(Result result)
+        {
+            if (result != null)
+            {
+                this.formDescription.SetData(result.Text);
+            }
         }
         #endregion
 
@@ -63,7 +92,7 @@ namespace woanware
         /// <param name="e"></param>
         private void menuToolsOptions_Click(object sender, EventArgs e)
         {
-            using (FormOptions formOptions = new FormOptions(_settings, _ignoredPlugins))
+            using (FormOptions formOptions = new FormOptions(_settings, IgnoredPlugins))
             {
                 if (formOptions.ShowDialog(this) == DialogResult.Cancel)
                 {
@@ -71,7 +100,7 @@ namespace woanware
                 }
 
                 _settings = formOptions.Settings;
-                _ignoredPlugins = formOptions.IgnorePlugins;
+                IgnoredPlugins = formOptions.IgnorePlugins;
 
                 if (formOptions.NeedsReload == true)
                 {
@@ -455,7 +484,7 @@ namespace woanware
         /// </summary>
         /// <param name="comboBox"></param>
         /// <param name="text"></param>
-        private void SetFilterComboBoxItem(ComboBox comboBox, string text)
+        public void SetFilterComboBoxItem(ComboBox comboBox, string text)
         {
             for (int index = 0; index < comboBox.Items.Count; index++)
             {
@@ -472,7 +501,7 @@ namespace woanware
         /// </summary>
         /// <param name="comboBox"></param>
         /// <param name="text"></param>
-        private void SetFilterComboBoxItem(ToolStripComboBox comboBox, string text)
+        public void SetFilterComboBoxItem(ToolStripComboBox comboBox, string text)
         {
             for (int index = 0; index < comboBox.Items.Count; index++)
             {
@@ -482,6 +511,24 @@ namespace woanware
                     return;
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ClearFilters()
+        {
+            cboFilterIp.SelectedIndex = 0;
+            cboFilterPluginFamilyName.SelectedIndex = 0;
+            cboFilterPluginId.SelectedIndex = 0;
+            cboFilterPluginName.SelectedIndex = 0;
+            cboFilterService.SelectedIndex = 0;
+            cboFilterPort.SelectedIndex = 0;
+            cboFilterProduct.SelectedIndex = 0;
+            cboFilterProtocol.SelectedIndex = 0;
+            cboFilterService.SelectedIndex = 0;
+            cboFilterType.SelectedIndex = 0;
+            cboFilterVersion.SelectedIndex = 0;
         }
         #endregion
 
@@ -500,7 +547,7 @@ namespace woanware
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnFileFinder_CompleteEvent(object sender, EventArgs e)
+        private void OnFileFinder_CompleteEvent()
         {
             _networkScanParser.Parse();
         }
@@ -517,6 +564,11 @@ namespace woanware
             if (_isLoading == true)
             {
                 return;
+            }
+
+            if (_settings.MoveFocusToList == true)
+            {
+                this.formList.SetFocusToList();
             }
 
             LoadResults(1);
@@ -551,96 +603,17 @@ namespace woanware
         /// <summary>
         /// 
         /// </summary>
-        private void LoadResults(int page)
+        public void LoadResults(int page)
         {
             MethodInvoker methodInvoker = delegate
             {
                 _currentResultsPage = page;
 
-                //using (new HourGlass(this))
+                using (new HourGlass(this))
                 using (Connection connection = Esent.OpenDatabase(_networkScanParser.OutputPath + @"\data.edb"))
                 using (Table table = connection.OpenTable("Data"))
                 {
                     var query = GetQuery(table);
-
-                    //var query = from data in table select data;
-
-                    //if (cboFilterType.SelectedIndex != -1 & cboFilterType.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterType.Items[cboFilterType.SelectedIndex].ToString();
-                    //    query = query.Where(record => record["Type"].ToString() == value);
-                    //}
-
-                    //if (cboFilterIp.SelectedIndex != -1 & cboFilterIp.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterIp.Items[cboFilterIp.SelectedIndex].ToString();
-                    //    query = query.Where(result => result["IpAddress"].ToString() == value);
-                    //}
-
-                    //if (cboFilterHostName.SelectedIndex != -1 & cboFilterHostName.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterHostName.Items[cboFilterHostName.SelectedIndex].ToString();
-                    //    query = query.Where(result => result["HostName"].ToString() == value);
-                    //}
-
-                    //if (cboFilterPort.SelectedIndex != -1 & cboFilterPort.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterPort.Items[cboFilterPort.SelectedIndex].ToString();
-                    //    query = query.Where(result => result["Port"].ToString() == value);
-                    //}
-
-                    //if (cboFilterService.SelectedIndex != -1 & cboFilterService.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterService.Items[cboFilterService.SelectedIndex].ToString();
-                    //    query = query.Where(result => result["Service"].ToString() == value);
-                    //}
-
-                    //if (cboFilterState.SelectedIndex != -1 & cboFilterState.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterState.Items[cboFilterState.SelectedIndex].ToString();
-                    //    query = query.Where(result => result["State"].ToString() == value);
-                    //}
-
-                    //if (cboFilterProtocol.SelectedIndex != -1 & cboFilterProtocol.SelectedIndex != 0)
-                    //{
-                    //    string value = cboFilterProtocol.Items[cboFilterProtocol.SelectedIndex].ToString();
-                    //    query = query.Where(result => result["Protocol"].ToString() == value);
-                    //}
-
-                    //if (cboFilterPluginId.SelectedIndex != -1 & cboFilterPluginId.SelectedIndex != 0)
-                    //{
-                    //    query = query.Where(result => result["PluginId"].ToString() == cboFilterPluginId.Items[cboFilterPluginId.SelectedIndex].ToString());
-                    //}
-
-                    //if (cboFilterPluginFamilyName.SelectedIndex != -1 & cboFilterPluginFamilyName.SelectedIndex != 0)
-                    //{
-                    //    query = query.Where(result => result["PluginFamily"].ToString() == cboFilterPluginFamilyName.Items[cboFilterPluginFamilyName.SelectedIndex].ToString());
-                    //}
-
-                    //if (cboFilterPluginName.SelectedIndex != -1 & cboFilterPluginName.SelectedIndex != 0)
-                    //{
-                    //    query = query.Where(result => result["PluginName"].ToString() == cboFilterPluginName.Items[cboFilterPluginName.SelectedIndex].ToString());
-                    //}
-
-                    //if (cboFilterProduct.SelectedIndex != -1 & cboFilterProduct.SelectedIndex != 0)
-                    //{
-                    //    query = query.Where(result => result["Product"].ToString() == cboFilterProduct.Items[cboFilterProduct.SelectedIndex].ToString());
-                    //}
-
-                    //if (cboFilterVersion.SelectedIndex != -1 & cboFilterVersion.SelectedIndex != 0)
-                    //{
-                    //    query = query.Where(result => result["Version"].ToString() == cboFilterVersion.Items[cboFilterVersion.SelectedIndex].ToString());
-                    //}
-
-                    //if (txtFilterSearch.Text.Length > 0)
-                    //{
-                    //    query = query.Where(result => result["Text"].ToString().IndexOf(txtFilterSearch.Text, StringComparison.InvariantCultureIgnoreCase) > -1);
-                    //}
-
-                    //if (_ignoredPlugins.Plugins.Count > 0)
-                    //{
-                    //    query = from q in query where !(from p in _ignoredPlugins.Plugins select p.PluginId).Contains(q["PluginId"]) select q;
-                    //}
 
                     if (_currentResultsPage == 1)
                     {
@@ -697,8 +670,7 @@ namespace woanware
                         results.Add(result);
                     }
 
-                    listResults.ClearObjects();
-                    listResults.SetObjects(results);
+                    this.formList.SetResults(results);
                  
                     UpdateStatusBar("Loaded " + query.Count() + " results");
                     SetFormFilterText();
@@ -808,9 +780,9 @@ namespace woanware
                 query = query.Where(result => result["Text"].ToString().IndexOf(txtFilterSearch.Text, StringComparison.InvariantCultureIgnoreCase) > -1);
             }
 
-            if (_ignoredPlugins.Plugins.Count > 0)
+            if (IgnoredPlugins.Plugins.Count > 0)
             {
-                query = from q in query where !(from p in _ignoredPlugins.Plugins select p.PluginId).Contains(q["PluginId"]) select q;
+                query = from q in query where !(from p in IgnoredPlugins.Plugins select p.PluginId).Contains(q["PluginId"]) select q;
             }
 
             return query;
@@ -907,583 +879,6 @@ namespace woanware
                 {
                     output.AppendFormat("{0}: {1}" + Environment.NewLine, name, value.Trim());
                 }
-            }
-        }
-        #endregion
-
-        #region List Event Handlers
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void listResults_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                ctxMenuResultsCopyIpAddress.Enabled = false;
-                ctxMenuResultsCopyPort.Enabled = false;
-                ctxMenuResultsCopyService.Enabled = false;
-
-                ctxMenuResultsFilterHost.Enabled = false;
-                ctxMenuResultsFilterPluginFamily.Enabled = false;
-                ctxMenuResultsFilterPluginId.Enabled = false;
-                ctxMenuResultsFilterPluginName.Enabled = false;
-                ctxMenuResultsFilterPort.Enabled = false;
-                ctxMenuResultsFilterProduct.Enabled = false;
-                ctxMenuResultsFilterProtocol.Enabled = false;
-                ctxMenuResultsFilterService.Enabled = false;
-                ctxMenuResultsFilterSeverity.Enabled = false;
-                ctxMenuResultsFilterType.Enabled = false;
-                ctxMenuResultsFilterVersion.Enabled = false;
-                return;
-            }
-
-            ctxMenuResultsCopyIpAddress.Enabled = true;
-            ctxMenuResultsCopyPort.Enabled = true;
-            ctxMenuResultsCopyService.Enabled = true;
-
-            ctxMenuResultsFilterHost.Enabled = true;
-            ctxMenuResultsFilterPluginFamily.Enabled = true;
-            ctxMenuResultsFilterPluginId.Enabled = true;
-            ctxMenuResultsFilterPluginName.Enabled = true;
-            ctxMenuResultsFilterPort.Enabled = true;
-            ctxMenuResultsFilterProduct.Enabled = true;
-            ctxMenuResultsFilterProtocol.Enabled = true;
-            ctxMenuResultsFilterService.Enabled = true;
-            ctxMenuResultsFilterSeverity.Enabled = true;
-            ctxMenuResultsFilterType.Enabled = true;
-            ctxMenuResultsFilterVersion.Enabled = true;
-
-            Result result = (Result)listResults.SelectedObject;
-
-            txtData.Text = result.Text;
-        }
-        #endregion
-
-        #region Results Context Menu Event Handlers
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterType_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;    
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterType, result.Type);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterHost_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterIp, result.IpAddress);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterPort_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterPort, result.Port.ToString());
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterProtocol_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterProtocol, result.Protocol);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterService_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterService, result.Service);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterSeverity_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterSeverity, result.IpAddress);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterPluginId_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterPluginId, result.PluginId);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterPluginFamily_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterPluginFamilyName, result.PluginFamily);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterPluginName_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterPluginName, result.PluginName);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterProduct_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterProduct, result.Product);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsFilterVersion_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObject == null)
-            {
-                return;
-            }
-
-            if (_isLoading == true)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObject;
-
-            SetFilterComboBoxItem(cboFilterVersion, result.Version);
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsClearFilters_Click(object sender, EventArgs e)
-        {
-            cboFilterIp.SelectedIndex = 0;
-            cboFilterPluginFamilyName.SelectedIndex = 0;
-            cboFilterPluginId.SelectedIndex = 0;
-            cboFilterPluginName.SelectedIndex = 0;
-            cboFilterService.SelectedIndex = 0;
-            cboFilterPort.SelectedIndex = 0;
-            cboFilterProduct.SelectedIndex = 0;
-            cboFilterProtocol.SelectedIndex = 0;
-            cboFilterService.SelectedIndex = 0;
-            cboFilterType.SelectedIndex = 0;
-            cboFilterVersion.SelectedIndex = 0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResults_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (listResults.SelectedObjects.Count == 0)
-            {
-                ctxMenuResultsCopyIpAddress.Enabled = false;
-                ctxMenuResultsCopyPort.Enabled = false;
-                ctxMenuResultsCopyService.Enabled = false;
-
-                ctxMenuResultsCopyIpAddress.Text = "IP Address";
-                ctxMenuResultsCopyPort.Text = "Port";
-                ctxMenuResultsCopyService.Text = "Service";
-
-                ctxMenuResultsClearFilters.Enabled = true;
-                ctxMenuResultsFilterHost.Enabled = false;
-                ctxMenuResultsFilterPluginFamily.Enabled = false;
-                ctxMenuResultsFilterPluginId.Enabled = false;
-                ctxMenuResultsFilterPort.Enabled = false;
-                ctxMenuResultsFilterProduct.Enabled = false;
-                ctxMenuResultsFilterService.Enabled = false;
-                ctxMenuResultsFilterSeverity.Enabled = false;
-                ctxMenuResultsFilterType.Enabled = false;
-                ctxMenuResultsFilterVersion.Enabled = false;
-
-                ctxMenuResultsIgnorePlugin.Enabled = false;
-            }
-            else if (listResults.SelectedObjects.Count == 1)
-            {
-                ctxMenuResultsCopyIpAddress.Enabled = true;
-                ctxMenuResultsCopyPort.Enabled = true;
-                ctxMenuResultsCopyService.Enabled = true;
-
-                ctxMenuResultsCopyIpAddress.Text = "IP Address";
-                ctxMenuResultsCopyPort.Text = "Port";
-                ctxMenuResultsCopyService.Text = "Service";
-
-                ctxMenuResultsClearFilters.Enabled = true;
-                ctxMenuResultsFilterHost.Enabled = true;
-                ctxMenuResultsFilterPluginFamily.Enabled = true;
-                ctxMenuResultsFilterPluginId.Enabled = true;
-                ctxMenuResultsFilterPort.Enabled = true;
-                ctxMenuResultsFilterProduct.Enabled = true;
-                ctxMenuResultsFilterService.Enabled = true;
-                ctxMenuResultsFilterSeverity.Enabled = true;
-                ctxMenuResultsFilterType.Enabled = true;
-                ctxMenuResultsFilterVersion.Enabled = true;
-
-                Result result = (Result)listResults.SelectedObjects[0];
-                if (result.PluginId.Length > 0 & result.PluginName.Length > 0)
-                {
-                    ctxMenuResultsIgnorePlugin.Enabled = true;
-                }
-                else
-                {
-                    ctxMenuResultsIgnorePlugin.Enabled = false;
-                }
-            }
-            else
-            {
-                ctxMenuResultsCopyIpAddress.Enabled = true;
-                ctxMenuResultsCopyPort.Enabled = true;
-                ctxMenuResultsCopyService.Enabled = true;
-
-                ctxMenuResultsCopyIpAddress.Text = "IP Addresses";
-                ctxMenuResultsCopyPort.Text = "Ports";
-                ctxMenuResultsCopyService.Text = "Services";
-
-                ctxMenuResultsClearFilters.Enabled = true;
-                ctxMenuResultsFilterHost.Enabled = false;
-                ctxMenuResultsFilterPluginFamily.Enabled = false;
-                ctxMenuResultsFilterPluginId.Enabled = false;
-                ctxMenuResultsFilterPort.Enabled = false;
-                ctxMenuResultsFilterProduct.Enabled = false;
-                ctxMenuResultsFilterService.Enabled = false;
-                ctxMenuResultsFilterSeverity.Enabled = false;
-                ctxMenuResultsFilterType.Enabled = false;
-                ctxMenuResultsFilterVersion.Enabled = false;
-
-                ctxMenuResultsIgnorePlugin.Enabled = false;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsIgnorePlugin_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObjects == null)
-            {
-                return;
-            }
-
-            Result result = (Result)listResults.SelectedObjects[0];
-            if (result == null)
-            {
-                return;
-            }
-
-            Plugin plugin = new Plugin();
-            plugin.PluginId = result.PluginId;
-            plugin.PluginName = result.PluginName;
-
-            _ignoredPlugins.Plugins.Add(plugin);
-
-            LoadResults(1);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsCopyIpAddress_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObjects == null)
-            {
-                return;
-            }
-
-            List<IpAddress> list = new List<IpAddress>();
-
-            for (int index = 0; index < listResults.SelectedObjects.Count; index++)
-            {
-                Result result = (Result)listResults.SelectedObjects[index];
-
-                IpAddress ipAddress = new IpAddress();
-                ipAddress.Text = result.IpAddress;
-
-                var temp = from l in list where l.Text == result.IpAddress select l;
-                if (temp.Count() == 0)
-                {
-                    list.Add(ipAddress);
-                }
-            }
-
-            list.Sort();
-
-            string output = string.Empty;
-            for (int index = 0; index < list.Count; index++)
-            {
-                if (index + 1 != list.Count)
-                {
-                    output += list[index].Text + Environment.NewLine;
-                }
-                else
-                {
-                    output += list[index].Text;
-                }
-            }
-
-            if (output.Length > 0)
-            {
-                Clipboard.SetText(output);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsCopyPort_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObjects == null)
-            {
-                return;
-            }
-
-            List<int> list = new List<int>();
-            
-            for (int index = 0; index < listResults.SelectedObjects.Count; index++)
-            {
-                Result result = (Result)listResults.SelectedObjects[index];
-
-                if (list.Contains(result.Port) == false)
-                {
-                    list.Add(result.Port);
-                }
-            }
-
-            list.Sort();
-
-            string temp = string.Empty;
-            for (int index = 0; index < list.Count; index++)
-            {
-                if (index + 1 != list.Count)
-                {
-                    temp += list[index] + Environment.NewLine;
-                }
-                else
-                {
-                    temp += list[index];
-                }
-            }
-
-            if (temp.Length > 0)
-            {
-                Clipboard.SetText(temp);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ctxMenuResultsCopyService_Click(object sender, EventArgs e)
-        {
-            if (listResults.SelectedObjects == null)
-            {
-                return;
-            }
-
-            List<string> list = new List<string>();
-
-            for (int index = 0; index < listResults.SelectedObjects.Count; index++)
-            {
-                Result result = (Result)listResults.SelectedObjects[index];
-
-                if (list.Contains(result.Service) == false)
-                {
-                    list.Add(result.Service);
-                }
-            }
-
-            list.Sort();
-
-            string temp = string.Empty;
-            for (int index = 0; index < list.Count; index++)
-            {
-                if (index + 1 != list.Count)
-                {
-                    temp += list[index] + Environment.NewLine;
-                }
-                else
-                {
-                    temp += list[index];
-                }
-            }
-
-            if (temp.Length > 0)
-            {
-                Clipboard.SetText(temp);
             }
         }
         #endregion
@@ -1728,31 +1123,31 @@ namespace woanware
                 return;
             }
 
-            if (fileFormat == FileFormat.Xml)
-            {
-                XmlResultExport xmlExport = new XmlResultExport();
-                foreach (Result result in listResults.Objects)
-                {
-                    result.PluginOutput = result.PluginOutput.Replace(Environment.NewLine, " ");
+            //if (fileFormat == FileFormat.Xml)
+            //{
+            //    XmlResultExport xmlExport = new XmlResultExport();
+            //    foreach (Result result in listResults.Objects)
+            //    {
+            //        result.PluginOutput = result.PluginOutput.Replace(Environment.NewLine, " ");
 
-                    xmlExport.Results.Add(result);
-                }
+            //        xmlExport.Results.Add(result);
+            //    }
 
-                string ret = xmlExport.Save(saveFileDialog.FileName);
+            //    string ret = xmlExport.Save(saveFileDialog.FileName);
 
-                if (ret.Length > 0)
-                {
-                    UserInterface.DisplayErrorMessageBox(this, ret);
-                }
-                else
-                {
-                    statusLabel.Text = "Results successfully exported to XML";
-                }
-            }
-            else if (fileFormat == FileFormat.Csv)
-            {
-                this.GenerateResultsCsv(saveFileDialog.FileName);
-            }
+            //    if (ret.Length > 0)
+            //    {
+            //        UserInterface.DisplayErrorMessageBox(this, ret);
+            //    }
+            //    else
+            //    {
+            //        statusLabel.Text = "Results successfully exported to XML";
+            //    }
+            //}
+            //else if (fileFormat == FileFormat.Csv)
+            //{
+            //    this.GenerateResultsCsv(saveFileDialog.FileName);
+            //}
         }
 
         /// <summary>
@@ -1952,16 +1347,6 @@ namespace woanware
                 return string.Empty;
             }
 
-            //if (_networkScanParser.Results == null)
-            //{
-            //    return string.Empty;
-            //}
-
-            //if (_networkScanParser.Results.Count == 0)
-            //{
-            //    return string.Empty;
-            //}
-
             StringBuilder output = new StringBuilder();
 
             output.AppendLine("IP_ADDRESS,NETBIOS_NAME,DNS_NAME,MAC_ADDRESS,OS,PORTS,NUM_CRITICAL,NUM_HIGH,NUM_MED,NUM_LOW,START_TIME,END_TIME");
@@ -2084,7 +1469,7 @@ namespace woanware
                 }
             }
 
-            _ignoredPlugins = new IgnorePlugins();
+            IgnoredPlugins = new IgnorePlugins();
         }
 
         /// <summary>
@@ -2103,7 +1488,7 @@ namespace woanware
                 UserInterface.DisplayErrorMessageBox(this, ret);
             }
 
-            ret = _ignoredPlugins.Save();
+            ret = IgnoredPlugins.Save();
             if (ret.Length > 0)
             {
                 UserInterface.DisplayErrorMessageBox(this, ret);
@@ -2179,20 +1564,20 @@ namespace woanware
         /// </summary>
         private void SetPagingButtonStatus()
         {
-            if (_totalResultsPages == 0)
-            {
-                btnResultsFirstPage.Enabled = false;
-                btnResultsLastPage.Enabled = false;
-                btnResultsNextPage.Enabled = false;
-                btnResultsPreviousPage.Enabled = false;
-            }
-            else
-            {
-                btnResultsFirstPage.Enabled = (_currentResultsPage != 1);
-                btnResultsLastPage.Enabled = (_currentResultsPage < _totalResultsPages);
-                btnResultsNextPage.Enabled = (_currentResultsPage < _totalResultsPages);
-                btnResultsPreviousPage.Enabled = (_currentResultsPage != 1);
-            }
+            //if (_totalResultsPages == 0)
+            //{
+            //    btnResultsFirstPage.Enabled = false;
+            //    btnResultsLastPage.Enabled = false;
+            //    btnResultsNextPage.Enabled = false;
+            //    btnResultsPreviousPage.Enabled = false;
+            //}
+            //else
+            //{
+            //    btnResultsFirstPage.Enabled = (_currentResultsPage != 1);
+            //    btnResultsLastPage.Enabled = (_currentResultsPage < _totalResultsPages);
+            //    btnResultsNextPage.Enabled = (_currentResultsPage < _totalResultsPages);
+            //    btnResultsPreviousPage.Enabled = (_currentResultsPage != 1);
+            //}
         }
     }
 }

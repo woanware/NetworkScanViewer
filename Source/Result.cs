@@ -2,6 +2,7 @@
 
 namespace woanware
 {
+    #region Enums
     /// <summary>
     /// 
     /// </summary>
@@ -10,6 +11,7 @@ namespace woanware
         Nessus = 0,
         Nmap = 1
     }
+    #endregion
 
     /// <summary>
     /// 
@@ -117,55 +119,5 @@ namespace woanware
             ExtraInfo = string.Empty;
         }
         #endregion
-
-        //#region IComparable Interface
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="other"></param>
-        ///// <returns></returns>
-        //public int CompareTo(Result other)
-        //{
-        //    if (IpCompare.AreEqual(this.IpAddress, other.IpAddress) == true)
-        //    {
-        //        return 0;
-        //    }
-
-        //    if (IpCompare.IsGreater(this.IpAddress, other.IpAddress) == true)
-        //    {
-        //        return 1;
-        //    }
-
-        //    if (IpCompare.IsLess(this.IpAddress, other.IpAddress) == true)
-        //    {
-        //        return -1;
-        //    }
-
-        //    return 0;
-        //}
-        //#endregion
-
-        //#region Properties
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public string Text
-        //{
-        //    get
-        //    {
-        //        return Description + Environment.NewLine + 
-        //               Severity + Environment.NewLine + 
-        //               Synopsis + Environment.NewLine + 
-        //               PluginOutput + Environment.NewLine + 
-        //               SeeAlso + Environment.NewLine + 
-        //               Cve + Environment.NewLine + 
-        //               Bid + Environment.NewLine + 
-        //               Xref + Environment.NewLine +
-        //               Version + Environment.NewLine +
-        //               Product + Environment.NewLine + 
-        //               ExtraInfo + Environment.NewLine;
-        //    }
-        //}
-        //#endregion
     }
 }

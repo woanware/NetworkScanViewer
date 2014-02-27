@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -36,11 +34,9 @@ namespace woanware
             try
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(XmlResultExport));
-
                 using (StreamWriter streamWriter = new StreamWriter(fileName, false))
                 {
                     xmlSerializer.Serialize(streamWriter, this);
-
                     return String.Empty;
                 }
             }
@@ -72,21 +68,18 @@ namespace woanware
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(XmlResultExport));
 
-                if (File.Exists(fileName) == true)
+                if (File.Exists(fileName) == false)
                 {
-                    FileInfo fileInfo = new FileInfo(fileName);
-
-                    using (FileStream fileStream = fileInfo.OpenRead())
-                    {
-                        XmlResultExport temp = (XmlResultExport)xmlSerializer.Deserialize(fileStream);
-
-                        Results = temp.Results;
-                       
-                        return String.Empty;
-                    }
+                    return "Cannot locate the XML file: " + fileName;
                 }
 
-                return "Cannot locate the XML file: " + woanware.Misc.GetApplicationDirectory() + System.IO.Path.DirectorySeparatorChar + fileName;
+                FileInfo fileInfo = new FileInfo(fileName);
+                using (FileStream fileStream = fileInfo.OpenRead())
+                {
+                    XmlResultExport temp = (XmlResultExport)xmlSerializer.Deserialize(fileStream);
+                    Results = temp.Results;
+                    return String.Empty;
+                }
             }
             catch (FileNotFoundException fex)
             {

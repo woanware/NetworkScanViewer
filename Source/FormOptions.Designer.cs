@@ -37,12 +37,13 @@
             this.chkAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.chkColourSevere = new System.Windows.Forms.CheckBox();
             this.tabIgnoredPlugins = new System.Windows.Forms.TabPage();
-            this.btnRemovePlugin = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOk = new System.Windows.Forms.Button();
             this.listPlugins = new BrightIdeasSoftware.ObjectListView();
             this.olvcPluginId = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvcPluginName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.btnRemovePlugin = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOk = new System.Windows.Forms.Button();
+            this.chkMoveFocusToList = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.tabIgnoredPlugins.SuspendLayout();
@@ -64,6 +65,7 @@
             // 
             // tabGeneral
             // 
+            this.tabGeneral.Controls.Add(this.chkMoveFocusToList);
             this.tabGeneral.Controls.Add(this.chkRemoveNewLinesOnExport);
             this.tabGeneral.Controls.Add(this.lblNumResultsPerPage);
             this.tabGeneral.Controls.Add(this.cboNumResultsPerPage);
@@ -80,7 +82,7 @@
             // chkRemoveNewLinesOnExport
             // 
             this.chkRemoveNewLinesOnExport.AutoSize = true;
-            this.chkRemoveNewLinesOnExport.Location = new System.Drawing.Point(28, 82);
+            this.chkRemoveNewLinesOnExport.Location = new System.Drawing.Point(46, 82);
             this.chkRemoveNewLinesOnExport.Name = "chkRemoveNewLinesOnExport";
             this.chkRemoveNewLinesOnExport.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.chkRemoveNewLinesOnExport.Size = new System.Drawing.Size(174, 19);
@@ -91,7 +93,7 @@
             // lblNumResultsPerPage
             // 
             this.lblNumResultsPerPage.AutoSize = true;
-            this.lblNumResultsPerPage.Location = new System.Drawing.Point(69, 57);
+            this.lblNumResultsPerPage.Location = new System.Drawing.Point(86, 57);
             this.lblNumResultsPerPage.Name = "lblNumResultsPerPage";
             this.lblNumResultsPerPage.Size = new System.Drawing.Size(115, 15);
             this.lblNumResultsPerPage.TabIndex = 3;
@@ -109,7 +111,7 @@
             "5000",
             "10000",
             "20000"});
-            this.cboNumResultsPerPage.Location = new System.Drawing.Point(187, 53);
+            this.cboNumResultsPerPage.Location = new System.Drawing.Point(206, 53);
             this.cboNumResultsPerPage.Name = "cboNumResultsPerPage";
             this.cboNumResultsPerPage.Size = new System.Drawing.Size(77, 23);
             this.cboNumResultsPerPage.TabIndex = 2;
@@ -117,7 +119,7 @@
             // chkAlwaysOnTop
             // 
             this.chkAlwaysOnTop.AutoSize = true;
-            this.chkAlwaysOnTop.Location = new System.Drawing.Point(101, 29);
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(119, 29);
             this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
             this.chkAlwaysOnTop.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.chkAlwaysOnTop.Size = new System.Drawing.Size(101, 19);
@@ -128,7 +130,7 @@
             // chkColourSevere
             // 
             this.chkColourSevere.AutoSize = true;
-            this.chkColourSevere.Location = new System.Drawing.Point(3, 6);
+            this.chkColourSevere.Location = new System.Drawing.Point(21, 6);
             this.chkColourSevere.Name = "chkColourSevere";
             this.chkColourSevere.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.chkColourSevere.Size = new System.Drawing.Size(199, 19);
@@ -147,6 +149,32 @@
             this.tabIgnoredPlugins.TabIndex = 1;
             this.tabIgnoredPlugins.Text = "Ignored Plugins";
             this.tabIgnoredPlugins.UseVisualStyleBackColor = true;
+            // 
+            // listPlugins
+            // 
+            this.listPlugins.AllColumns.Add(this.olvcPluginId);
+            this.listPlugins.AllColumns.Add(this.olvcPluginName);
+            this.listPlugins.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvcPluginId,
+            this.olvcPluginName});
+            this.listPlugins.Location = new System.Drawing.Point(6, 6);
+            this.listPlugins.Name = "listPlugins";
+            this.listPlugins.Size = new System.Drawing.Size(526, 252);
+            this.listPlugins.TabIndex = 2;
+            this.listPlugins.UseCompatibleStateImageBehavior = false;
+            this.listPlugins.View = System.Windows.Forms.View.Details;
+            // 
+            // olvcPluginId
+            // 
+            this.olvcPluginId.AspectName = "PluginId";
+            this.olvcPluginId.CellPadding = null;
+            this.olvcPluginId.Text = "ID";
+            // 
+            // olvcPluginName
+            // 
+            this.olvcPluginName.AspectName = "PluginName";
+            this.olvcPluginName.CellPadding = null;
+            this.olvcPluginName.Text = "Name";
             // 
             // btnRemovePlugin
             // 
@@ -182,31 +210,16 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // listPlugins
+            // chkMoveFocusToList
             // 
-            this.listPlugins.AllColumns.Add(this.olvcPluginId);
-            this.listPlugins.AllColumns.Add(this.olvcPluginName);
-            this.listPlugins.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvcPluginId,
-            this.olvcPluginName});
-            this.listPlugins.Location = new System.Drawing.Point(6, 6);
-            this.listPlugins.Name = "listPlugins";
-            this.listPlugins.Size = new System.Drawing.Size(526, 252);
-            this.listPlugins.TabIndex = 2;
-            this.listPlugins.UseCompatibleStateImageBehavior = false;
-            this.listPlugins.View = System.Windows.Forms.View.Details;
-            // 
-            // olvcPluginId
-            // 
-            this.olvcPluginId.AspectName = "PluginId";
-            this.olvcPluginId.CellPadding = null;
-            this.olvcPluginId.Text = "ID";
-            // 
-            // olvcPluginName
-            // 
-            this.olvcPluginName.AspectName = "PluginName";
-            this.olvcPluginName.CellPadding = null;
-            this.olvcPluginName.Text = "Name";
+            this.chkMoveFocusToList.AutoSize = true;
+            this.chkMoveFocusToList.Location = new System.Drawing.Point(4, 110);
+            this.chkMoveFocusToList.Name = "chkMoveFocusToList";
+            this.chkMoveFocusToList.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chkMoveFocusToList.Size = new System.Drawing.Size(216, 19);
+            this.chkMoveFocusToList.TabIndex = 5;
+            this.chkMoveFocusToList.Text = "Move focus to list after filter change";
+            this.chkMoveFocusToList.UseVisualStyleBackColor = true;
             // 
             // FormOptions
             // 
@@ -251,5 +264,6 @@
         private BrightIdeasSoftware.ObjectListView listPlugins;
         private BrightIdeasSoftware.OLVColumn olvcPluginId;
         private BrightIdeasSoftware.OLVColumn olvcPluginName;
+        private System.Windows.Forms.CheckBox chkMoveFocusToList;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace woanware
 {
@@ -8,30 +9,27 @@ namespace woanware
     /// </summary>
     public class FileFinder
     {
-        private delegate void StartDelegate(string path);
-
-        public delegate void UpdateEventHandler(string path);
-        public event EventHandler CompleteEvent;
-        public event UpdateEventHandler UpdateEvent;
+        public event woanware.Events.DefaultEvent CompleteEvent;
+        public event woanware.Events.MessageEvent UpdateEvent;
 
         /// <summary>
         /// 
         /// </summary>
         public void Start(string path)
         {
-            StartDelegate startDelegate = new StartDelegate(DoStart);
-            startDelegate.BeginInvoke(path, null, null);   
-        }
+            Task task = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    DirSearch(path);
+                }
+                catch (Exception){}
+                finally
+                {
+                    this.OnComplete();
+                }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        private void DoStart(string path)
-        {
-            DirSearch(path);
-
-            this.OnComplete();
+            }, TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
@@ -67,9 +65,10 @@ namespace woanware
         /// <param name="path"></param>
         private void OnUpdate(string path)
         {
-            if (UpdateEvent != null)
+            var handler = UpdateEvent;
+            if (handler != null)
             {
-                UpdateEvent(path);
+                handler(path);
             }
         }
 
@@ -78,9 +77,10 @@ namespace woanware
         /// </summary>
         private void OnComplete()
         {
-            if (CompleteEvent != null)
+            var handler = CompleteEvent;
+            if (handler != null)
             {
-                CompleteEvent(this, new EventArgs());
+                handler();
             }
         }
     }
