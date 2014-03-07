@@ -87,21 +87,31 @@ namespace woanware
         /// 
         /// </summary>
         /// <returns></returns>
+        public IEnumerable<Result> GetSelectedResults()
+        {
+            if (listResults.SelectedObjects == null)
+            {
+                return null;
+            }
+
+            return (IEnumerable<Result>)listResults.SelectedObjects.GetEnumerator();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetSelectedIpAddresses()
         {
-            List<IpAddress> list = new List<IpAddress>();
+            List<string> list = new List<string>();
 
             for (int index = 0; index < listResults.SelectedObjects.Count; index++)
             {
                 Result result = (Result)listResults.SelectedObjects[index];
-
-                IpAddress ipAddress = new IpAddress();
-                ipAddress.Text = result.IpAddress;
-
-                var temp = from l in list where l.Text == result.IpAddress select l;
+                var temp = from l in list where l == result.IpAddress select l;
                 if (temp.Count() == 0)
                 {
-                    list.Add(ipAddress);
+                    list.Add(result.IpAddress);
                 }
             }
 
@@ -540,17 +550,14 @@ namespace woanware
                 return;
             }
 
-            Result result = this.GetFirstSelectedResult();
-            if (result == null)
+            foreach (Result result in this.GetSelectedResults())
             {
-                return;
+                Plugin plugin = new Plugin();
+                plugin.PluginId = result.PluginId;
+                plugin.PluginName = result.PluginName;
+
+                this.formMain.IgnoredPlugins.Plugins.Add(plugin);
             }
-
-            Plugin plugin = new Plugin();
-            plugin.PluginId = result.PluginId;
-            plugin.PluginName = result.PluginName;
-
-            this.formMain.IgnoredPlugins.Plugins.Add(plugin);
 
             this.formMain.LoadResults(1);
         }
