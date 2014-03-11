@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOptions));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
+            this.chkMoveFocusToList = new System.Windows.Forms.CheckBox();
             this.chkRemoveNewLinesOnExport = new System.Windows.Forms.CheckBox();
             this.lblNumResultsPerPage = new System.Windows.Forms.Label();
             this.cboNumResultsPerPage = new System.Windows.Forms.ComboBox();
@@ -43,7 +44,6 @@
             this.btnRemovePlugin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.chkMoveFocusToList = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.tabIgnoredPlugins.SuspendLayout();
@@ -60,7 +60,7 @@
             this.tabControl.Location = new System.Drawing.Point(8, 8);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(547, 324);
+            this.tabControl.Size = new System.Drawing.Size(547, 330);
             this.tabControl.TabIndex = 0;
             // 
             // tabGeneral
@@ -74,10 +74,21 @@
             this.tabGeneral.Location = new System.Drawing.Point(4, 24);
             this.tabGeneral.Name = "tabGeneral";
             this.tabGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGeneral.Size = new System.Drawing.Size(539, 296);
+            this.tabGeneral.Size = new System.Drawing.Size(539, 302);
             this.tabGeneral.TabIndex = 0;
             this.tabGeneral.Text = "General";
             this.tabGeneral.UseVisualStyleBackColor = true;
+            // 
+            // chkMoveFocusToList
+            // 
+            this.chkMoveFocusToList.AutoSize = true;
+            this.chkMoveFocusToList.Location = new System.Drawing.Point(4, 110);
+            this.chkMoveFocusToList.Name = "chkMoveFocusToList";
+            this.chkMoveFocusToList.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chkMoveFocusToList.Size = new System.Drawing.Size(216, 19);
+            this.chkMoveFocusToList.TabIndex = 5;
+            this.chkMoveFocusToList.Text = "Move focus to list after filter change";
+            this.chkMoveFocusToList.UseVisualStyleBackColor = true;
             // 
             // chkRemoveNewLinesOnExport
             // 
@@ -191,9 +202,9 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(468, 338);
+            this.btnCancel.Location = new System.Drawing.Point(478, 341);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(87, 27);
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -202,24 +213,13 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(379, 338);
+            this.btnOk.Location = new System.Drawing.Point(399, 341);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(87, 27);
+            this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 1;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-            // 
-            // chkMoveFocusToList
-            // 
-            this.chkMoveFocusToList.AutoSize = true;
-            this.chkMoveFocusToList.Location = new System.Drawing.Point(4, 110);
-            this.chkMoveFocusToList.Name = "chkMoveFocusToList";
-            this.chkMoveFocusToList.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.chkMoveFocusToList.Size = new System.Drawing.Size(216, 19);
-            this.chkMoveFocusToList.TabIndex = 5;
-            this.chkMoveFocusToList.Text = "Move focus to list after filter change";
-            this.chkMoveFocusToList.UseVisualStyleBackColor = true;
             // 
             // FormOptions
             // 

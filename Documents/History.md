@@ -1,5 +1,10 @@
 # History #
 
+**v1.2.2**
+
+- Fixed bug where the CSV output didn't work. Thanks MichaelW
+- Fixed IP address copy. Thanks MattP
+
 **v1.2.1**
 
 - Implemented docking windows using the dockpanelsuite library. This allows the main description window to be docked in various positions or as a floating window

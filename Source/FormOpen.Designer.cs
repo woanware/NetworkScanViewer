@@ -51,9 +51,9 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(380, 88);
+            this.btnOk.Location = new System.Drawing.Point(401, 79);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(87, 27);
+            this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 6;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -62,9 +62,10 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(469, 88);
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(480, 79);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(87, 27);
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -72,7 +73,7 @@
             // 
             // btnInputFolder
             // 
-            this.btnInputFolder.Location = new System.Drawing.Point(533, 7);
+            this.btnInputFolder.Location = new System.Drawing.Point(533, 8);
             this.btnInputFolder.Name = "btnInputFolder";
             this.btnInputFolder.Size = new System.Drawing.Size(23, 23);
             this.btnInputFolder.TabIndex = 2;
@@ -104,7 +105,7 @@
             // 
             // btnOutputFolder
             // 
-            this.btnOutputFolder.Location = new System.Drawing.Point(533, 39);
+            this.btnOutputFolder.Location = new System.Drawing.Point(533, 37);
             this.btnOutputFolder.Name = "btnOutputFolder";
             this.btnOutputFolder.Size = new System.Drawing.Size(23, 23);
             this.btnOutputFolder.TabIndex = 5;
@@ -133,7 +134,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(566, 122);
+            this.CancelButton = this.btnCancel;
+            this.ClientSize = new System.Drawing.Size(566, 111);
             this.Controls.Add(this.chkDeleteExistingDatabase);
             this.Controls.Add(this.lblOutputFolder);
             this.Controls.Add(this.btnOutputFolder);

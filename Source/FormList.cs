@@ -97,6 +97,15 @@ namespace woanware
             return (IEnumerable<Result>)listResults.SelectedObjects.GetEnumerator();
         }
 
+        // <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Result> GetAllResults()
+        {
+            return (IEnumerable<Result>)listResults.Objects.GetEnumerator();
+        }
+
         /// <summary>
         /// 
         /// </summary>

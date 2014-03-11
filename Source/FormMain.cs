@@ -1123,31 +1123,31 @@ namespace woanware
                 return;
             }
 
-            //if (fileFormat == FileFormat.Xml)
-            //{
-            //    XmlResultExport xmlExport = new XmlResultExport();
-            //    foreach (Result result in listResults.Objects)
-            //    {
-            //        result.PluginOutput = result.PluginOutput.Replace(Environment.NewLine, " ");
+            if (fileFormat == FileFormat.Xml)
+            {
+                XmlResultExport xmlExport = new XmlResultExport();
+                foreach (Result result in this.formList.GetAllResults())
+                {
+                    result.PluginOutput = result.PluginOutput.Replace(Environment.NewLine, " ");
 
-            //        xmlExport.Results.Add(result);
-            //    }
+                    xmlExport.Results.Add(result);
+                }
 
-            //    string ret = xmlExport.Save(saveFileDialog.FileName);
+                string ret = xmlExport.Save(saveFileDialog.FileName);
 
-            //    if (ret.Length > 0)
-            //    {
-            //        UserInterface.DisplayErrorMessageBox(this, ret);
-            //    }
-            //    else
-            //    {
-            //        statusLabel.Text = "Results successfully exported to XML";
-            //    }
-            //}
-            //else if (fileFormat == FileFormat.Csv)
-            //{
-            //    this.GenerateResultsCsv(saveFileDialog.FileName);
-            //}
+                if (ret.Length > 0)
+                {
+                    UserInterface.DisplayErrorMessageBox(this, ret);
+                }
+                else
+                {
+                    statusLabel.Text = "Results successfully exported to XML";
+                }
+            }
+            else if (fileFormat == FileFormat.Csv)
+            {
+                this.GenerateResultsCsv(saveFileDialog.FileName);
+            }
         }
 
         /// <summary>
