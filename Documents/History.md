@@ -1,5 +1,9 @@
 # History #
 
+**v1.2.3**
+
+- Fixed IEnumerable casting
+
 **v1.2.2**
 
 - Fixed bug where the CSV output didn't work. Thanks MichaelW

@@ -43,10 +43,6 @@
             this.colResultsPluginId = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.colResultsPluginName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.colResultsPluginFamily = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.btnResultsLastPage = new System.Windows.Forms.Button();
-            this.btnResultsNextPage = new System.Windows.Forms.Button();
-            this.btnResultsPreviousPage = new System.Windows.Forms.Button();
-            this.btnResultsFirstPage = new System.Windows.Forms.Button();
             this.ctxMenuResults = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxMenuResultsCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuResultsCopyIpAddress = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,9 +63,13 @@
             this.ctxMenuResultsFilterProduct = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuResultsFilterVersion = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuResultsSepTwo = new System.Windows.Forms.ToolStripSeparator();
-            this.ctxMenuResultsIgnorePlugin = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxMenuResultsIgnorePlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.ctxMenuResultsClearFilters = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnResultsLastPage = new System.Windows.Forms.Button();
+            this.btnResultsNextPage = new System.Windows.Forms.Button();
+            this.btnResultsPreviousPage = new System.Windows.Forms.Button();
+            this.btnResultsFirstPage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.listResults)).BeginInit();
             this.ctxMenuResults.SuspendLayout();
             this.SuspendLayout();
@@ -211,46 +211,6 @@
             this.colResultsPluginFamily.Text = "Plugin Family";
             this.colResultsPluginFamily.Width = 100;
             // 
-            // btnResultsLastPage
-            // 
-            this.btnResultsLastPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnResultsLastPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsLastPage.Image")));
-            this.btnResultsLastPage.Location = new System.Drawing.Point(654, 297);
-            this.btnResultsLastPage.Name = "btnResultsLastPage";
-            this.btnResultsLastPage.Size = new System.Drawing.Size(25, 25);
-            this.btnResultsLastPage.TabIndex = 13;
-            this.btnResultsLastPage.UseVisualStyleBackColor = true;
-            // 
-            // btnResultsNextPage
-            // 
-            this.btnResultsNextPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnResultsNextPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsNextPage.Image")));
-            this.btnResultsNextPage.Location = new System.Drawing.Point(629, 297);
-            this.btnResultsNextPage.Name = "btnResultsNextPage";
-            this.btnResultsNextPage.Size = new System.Drawing.Size(25, 25);
-            this.btnResultsNextPage.TabIndex = 12;
-            this.btnResultsNextPage.UseVisualStyleBackColor = true;
-            // 
-            // btnResultsPreviousPage
-            // 
-            this.btnResultsPreviousPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnResultsPreviousPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsPreviousPage.Image")));
-            this.btnResultsPreviousPage.Location = new System.Drawing.Point(24, 297);
-            this.btnResultsPreviousPage.Name = "btnResultsPreviousPage";
-            this.btnResultsPreviousPage.Size = new System.Drawing.Size(25, 25);
-            this.btnResultsPreviousPage.TabIndex = 11;
-            this.btnResultsPreviousPage.UseVisualStyleBackColor = true;
-            // 
-            // btnResultsFirstPage
-            // 
-            this.btnResultsFirstPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnResultsFirstPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsFirstPage.Image")));
-            this.btnResultsFirstPage.Location = new System.Drawing.Point(-1, 297);
-            this.btnResultsFirstPage.Name = "btnResultsFirstPage";
-            this.btnResultsFirstPage.Size = new System.Drawing.Size(25, 25);
-            this.btnResultsFirstPage.TabIndex = 10;
-            this.btnResultsFirstPage.UseVisualStyleBackColor = true;
-            // 
             // ctxMenuResults
             // 
             this.ctxMenuResults.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -258,7 +218,7 @@
             this.ctxMenuResultsSepOne,
             this.ctxMenuResultsFilter,
             this.ctxMenuResultsSepTwo,
-            this.ctxMenuResultsIgnorePlugin,
+            this.ctxMenuResultsIgnorePlugins,
             this.toolStripMenuItem2,
             this.ctxMenuResultsClearFilters});
             this.ctxMenuResults.Name = "ctxMenuResults";
@@ -279,28 +239,28 @@
             // ctxMenuResultsCopyIpAddress
             // 
             this.ctxMenuResultsCopyIpAddress.Name = "ctxMenuResultsCopyIpAddress";
-            this.ctxMenuResultsCopyIpAddress.Size = new System.Drawing.Size(152, 22);
+            this.ctxMenuResultsCopyIpAddress.Size = new System.Drawing.Size(134, 22);
             this.ctxMenuResultsCopyIpAddress.Text = "IP Address";
             this.ctxMenuResultsCopyIpAddress.Click += new System.EventHandler(this.ctxMenuResultsCopyIpAddress_Click);
             // 
             // ctxMenuResultsCopyPort
             // 
             this.ctxMenuResultsCopyPort.Name = "ctxMenuResultsCopyPort";
-            this.ctxMenuResultsCopyPort.Size = new System.Drawing.Size(152, 22);
+            this.ctxMenuResultsCopyPort.Size = new System.Drawing.Size(134, 22);
             this.ctxMenuResultsCopyPort.Text = "Port";
             this.ctxMenuResultsCopyPort.Click += new System.EventHandler(this.ctxMenuResultsCopyPort_Click);
             // 
             // ctxMenuResultsCopyService
             // 
             this.ctxMenuResultsCopyService.Name = "ctxMenuResultsCopyService";
-            this.ctxMenuResultsCopyService.Size = new System.Drawing.Size(152, 22);
+            this.ctxMenuResultsCopyService.Size = new System.Drawing.Size(134, 22);
             this.ctxMenuResultsCopyService.Text = "Service";
             this.ctxMenuResultsCopyService.Click += new System.EventHandler(this.ctxMenuResultsCopyService_Click);
             // 
             // ctxMenuResultsCopyHostName
             // 
             this.ctxMenuResultsCopyHostName.Name = "ctxMenuResultsCopyHostName";
-            this.ctxMenuResultsCopyHostName.Size = new System.Drawing.Size(152, 22);
+            this.ctxMenuResultsCopyHostName.Size = new System.Drawing.Size(134, 22);
             this.ctxMenuResultsCopyHostName.Text = "Host Name";
             this.ctxMenuResultsCopyHostName.Click += new System.EventHandler(this.ctxMenuResultsCopyHostName_Click);
             // 
@@ -409,12 +369,12 @@
             this.ctxMenuResultsSepTwo.Name = "ctxMenuResultsSepTwo";
             this.ctxMenuResultsSepTwo.Size = new System.Drawing.Size(149, 6);
             // 
-            // ctxMenuResultsIgnorePlugin
+            // ctxMenuResultsIgnorePlugins
             // 
-            this.ctxMenuResultsIgnorePlugin.Name = "ctxMenuResultsIgnorePlugin";
-            this.ctxMenuResultsIgnorePlugin.Size = new System.Drawing.Size(152, 22);
-            this.ctxMenuResultsIgnorePlugin.Text = "Ignore Plugin";
-            this.ctxMenuResultsIgnorePlugin.Click += new System.EventHandler(this.ctxMenuResultsIgnorePlugin_Click);
+            this.ctxMenuResultsIgnorePlugins.Name = "ctxMenuResultsIgnorePlugins";
+            this.ctxMenuResultsIgnorePlugins.Size = new System.Drawing.Size(152, 22);
+            this.ctxMenuResultsIgnorePlugins.Text = "Ignore Plugins";
+            this.ctxMenuResultsIgnorePlugins.Click += new System.EventHandler(this.ctxMenuResultsIgnorePlugins_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -427,6 +387,46 @@
             this.ctxMenuResultsClearFilters.Size = new System.Drawing.Size(152, 22);
             this.ctxMenuResultsClearFilters.Text = "Clear Filters";
             this.ctxMenuResultsClearFilters.Click += new System.EventHandler(this.ctxMenuResultsClearFilters_Click);
+            // 
+            // btnResultsLastPage
+            // 
+            this.btnResultsLastPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnResultsLastPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsLastPage.Image")));
+            this.btnResultsLastPage.Location = new System.Drawing.Point(654, 297);
+            this.btnResultsLastPage.Name = "btnResultsLastPage";
+            this.btnResultsLastPage.Size = new System.Drawing.Size(25, 25);
+            this.btnResultsLastPage.TabIndex = 13;
+            this.btnResultsLastPage.UseVisualStyleBackColor = true;
+            // 
+            // btnResultsNextPage
+            // 
+            this.btnResultsNextPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnResultsNextPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsNextPage.Image")));
+            this.btnResultsNextPage.Location = new System.Drawing.Point(629, 297);
+            this.btnResultsNextPage.Name = "btnResultsNextPage";
+            this.btnResultsNextPage.Size = new System.Drawing.Size(25, 25);
+            this.btnResultsNextPage.TabIndex = 12;
+            this.btnResultsNextPage.UseVisualStyleBackColor = true;
+            // 
+            // btnResultsPreviousPage
+            // 
+            this.btnResultsPreviousPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnResultsPreviousPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsPreviousPage.Image")));
+            this.btnResultsPreviousPage.Location = new System.Drawing.Point(24, 297);
+            this.btnResultsPreviousPage.Name = "btnResultsPreviousPage";
+            this.btnResultsPreviousPage.Size = new System.Drawing.Size(25, 25);
+            this.btnResultsPreviousPage.TabIndex = 11;
+            this.btnResultsPreviousPage.UseVisualStyleBackColor = true;
+            // 
+            // btnResultsFirstPage
+            // 
+            this.btnResultsFirstPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnResultsFirstPage.Image = ((System.Drawing.Image)(resources.GetObject("btnResultsFirstPage.Image")));
+            this.btnResultsFirstPage.Location = new System.Drawing.Point(-1, 297);
+            this.btnResultsFirstPage.Name = "btnResultsFirstPage";
+            this.btnResultsFirstPage.Size = new System.Drawing.Size(25, 25);
+            this.btnResultsFirstPage.TabIndex = 10;
+            this.btnResultsFirstPage.UseVisualStyleBackColor = true;
             // 
             // FormList
             // 
@@ -485,7 +485,7 @@
         private System.Windows.Forms.ToolStripMenuItem ctxMenuResultsFilterProduct;
         private System.Windows.Forms.ToolStripMenuItem ctxMenuResultsFilterVersion;
         private System.Windows.Forms.ToolStripSeparator ctxMenuResultsSepTwo;
-        private System.Windows.Forms.ToolStripMenuItem ctxMenuResultsIgnorePlugin;
+        private System.Windows.Forms.ToolStripMenuItem ctxMenuResultsIgnorePlugins;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem ctxMenuResultsClearFilters;
         private System.Windows.Forms.ToolStripMenuItem ctxMenuResultsCopyHostName;

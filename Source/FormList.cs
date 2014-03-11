@@ -94,7 +94,7 @@ namespace woanware
                 return null;
             }
 
-            return (IEnumerable<Result>)listResults.SelectedObjects.GetEnumerator();
+            return (IEnumerable<Result>)listResults.SelectedObjects.Cast<Result>().GetEnumerator();
         }
 
         // <summary>
@@ -103,7 +103,7 @@ namespace woanware
         /// <returns></returns>
         public IEnumerable<Result> GetAllResults()
         {
-            return (IEnumerable<Result>)listResults.Objects.GetEnumerator();
+            return (IEnumerable<Result>)listResults.Objects.Cast<Result>().GetEnumerator();
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace woanware
                 ctxMenuResultsFilterType.Enabled = false;
                 ctxMenuResultsFilterVersion.Enabled = false;
 
-                ctxMenuResultsIgnorePlugin.Enabled = false;
+                ctxMenuResultsIgnorePlugins.Enabled = false;
             }
             else if (this.ListSelectedCount == 1)
             {
@@ -515,11 +515,11 @@ namespace woanware
                 Result result = this.GetFirstSelectedResult();
                 if (result.PluginId.Length > 0 & result.PluginName.Length > 0)
                 {
-                    ctxMenuResultsIgnorePlugin.Enabled = true;
+                    ctxMenuResultsIgnorePlugins.Enabled = true;
                 }
                 else
                 {
-                    ctxMenuResultsIgnorePlugin.Enabled = false;
+                    ctxMenuResultsIgnorePlugins.Enabled = false;
                 }
             }
             else
@@ -543,7 +543,7 @@ namespace woanware
                 ctxMenuResultsFilterType.Enabled = false;
                 ctxMenuResultsFilterVersion.Enabled = false;
 
-                ctxMenuResultsIgnorePlugin.Enabled = false;
+                ctxMenuResultsIgnorePlugins.Enabled = false;
             }
         }
 
@@ -552,7 +552,7 @@ namespace woanware
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ctxMenuResultsIgnorePlugin_Click(object sender, EventArgs e)
+        private void ctxMenuResultsIgnorePlugins_Click(object sender, EventArgs e)
         {
             if (this.ListSelectedCount == 0)
             {

@@ -45,13 +45,13 @@
             // 
             this.txtInputFolder.Location = new System.Drawing.Point(91, 8);
             this.txtInputFolder.Name = "txtInputFolder";
-            this.txtInputFolder.Size = new System.Drawing.Size(438, 23);
+            this.txtInputFolder.Size = new System.Drawing.Size(317, 23);
             this.txtInputFolder.TabIndex = 1;
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(401, 79);
+            this.btnOk.Location = new System.Drawing.Point(282, 79);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 6;
@@ -63,7 +63,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(480, 79);
+            this.btnCancel.Location = new System.Drawing.Point(361, 79);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
@@ -73,7 +73,7 @@
             // 
             // btnInputFolder
             // 
-            this.btnInputFolder.Location = new System.Drawing.Point(533, 8);
+            this.btnInputFolder.Location = new System.Drawing.Point(412, 8);
             this.btnInputFolder.Name = "btnInputFolder";
             this.btnInputFolder.Size = new System.Drawing.Size(23, 23);
             this.btnInputFolder.TabIndex = 2;
@@ -105,7 +105,7 @@
             // 
             // btnOutputFolder
             // 
-            this.btnOutputFolder.Location = new System.Drawing.Point(533, 37);
+            this.btnOutputFolder.Location = new System.Drawing.Point(412, 37);
             this.btnOutputFolder.Name = "btnOutputFolder";
             this.btnOutputFolder.Size = new System.Drawing.Size(23, 23);
             this.btnOutputFolder.TabIndex = 5;
@@ -117,7 +117,7 @@
             // 
             this.txtOutputFolder.Location = new System.Drawing.Point(91, 38);
             this.txtOutputFolder.Name = "txtOutputFolder";
-            this.txtOutputFolder.Size = new System.Drawing.Size(438, 23);
+            this.txtOutputFolder.Size = new System.Drawing.Size(317, 23);
             this.txtOutputFolder.TabIndex = 4;
             // 
             // chkDeleteExistingDatabase
@@ -135,7 +135,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(566, 111);
+            this.ClientSize = new System.Drawing.Size(444, 111);
             this.Controls.Add(this.chkDeleteExistingDatabase);
             this.Controls.Add(this.lblOutputFolder);
             this.Controls.Add(this.btnOutputFolder);

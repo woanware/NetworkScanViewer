@@ -156,7 +156,7 @@
             this.tabIgnoredPlugins.Location = new System.Drawing.Point(4, 24);
             this.tabIgnoredPlugins.Name = "tabIgnoredPlugins";
             this.tabIgnoredPlugins.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIgnoredPlugins.Size = new System.Drawing.Size(539, 296);
+            this.tabIgnoredPlugins.Size = new System.Drawing.Size(539, 302);
             this.tabIgnoredPlugins.TabIndex = 1;
             this.tabIgnoredPlugins.Text = "Ignored Plugins";
             this.tabIgnoredPlugins.UseVisualStyleBackColor = true;
@@ -165,12 +165,16 @@
             // 
             this.listPlugins.AllColumns.Add(this.olvcPluginId);
             this.listPlugins.AllColumns.Add(this.olvcPluginName);
+            this.listPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listPlugins.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvcPluginId,
             this.olvcPluginName});
             this.listPlugins.Location = new System.Drawing.Point(6, 6);
             this.listPlugins.Name = "listPlugins";
-            this.listPlugins.Size = new System.Drawing.Size(526, 252);
+            this.listPlugins.ShowGroups = false;
+            this.listPlugins.Size = new System.Drawing.Size(526, 260);
             this.listPlugins.TabIndex = 2;
             this.listPlugins.UseCompatibleStateImageBehavior = false;
             this.listPlugins.View = System.Windows.Forms.View.Details;
@@ -190,9 +194,9 @@
             // btnRemovePlugin
             // 
             this.btnRemovePlugin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRemovePlugin.Location = new System.Drawing.Point(5, 263);
+            this.btnRemovePlugin.Location = new System.Drawing.Point(5, 271);
             this.btnRemovePlugin.Name = "btnRemovePlugin";
-            this.btnRemovePlugin.Size = new System.Drawing.Size(87, 27);
+            this.btnRemovePlugin.Size = new System.Drawing.Size(75, 23);
             this.btnRemovePlugin.TabIndex = 1;
             this.btnRemovePlugin.Text = "Remove";
             this.btnRemovePlugin.UseVisualStyleBackColor = true;
